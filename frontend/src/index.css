@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F4F5F7;
+}
+
+::selection {
+  background-color: #00B37E;
+  color: white;
+}
+
+/* perforated receipt edge -- the app's signature visual motif */
+.receipt-edge-bottom {
+  -webkit-mask-image: radial-gradient(circle at 10px 0px, transparent 9px, black 9.5px);
+  -webkit-mask-size: 20px 10px;
+  -webkit-mask-repeat: repeat-x;
+  -webkit-mask-position: bottom;
+  mask-image: radial-gradient(circle at 10px 0px, transparent 9px, black 9.5px);
+  mask-size: 20px 10px;
+  mask-repeat: repeat-x;
+  mask-position: bottom;
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slide-up 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-up { animation: none; }
+}
