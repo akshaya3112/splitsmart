@@ -6,15 +6,18 @@ import { api, ApiClientError } from "../api/client";
 
 export default function CreateGroupModal({ onClose, onCreated }) {
   const [name, setName] = useState("");
-  const [members, setMembers] = useState(["", ""]);
+  const [members, setMembers] = useState([
+    { name: "", email: "" },
+    { name: "", email: "" }
+  ]);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  function updateMember(idx, value) {
-    setMembers((m) => m.map((v, i) => (i === idx ? value : v)));
+  function updateMember(idx, field, value) {
+    setMembers((m) => m.map((v, i) => (i === idx ? { ...v, [field]: value } : v)));
   }
   function addMemberField() {
-    setMembers((m) => [...m, ""]);
+    setMembers((m) => [...m, { name: "", email: "" }]);
   }
   function removeMemberField(idx) {
     setMembers((m) => m.filter((_, i) => i !== idx));
@@ -23,7 +26,10 @@ export default function CreateGroupModal({ onClose, onCreated }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-    const cleanMembers = members.map((m) => m.trim()).filter(Boolean);
+    const cleanMembers = members
+      .map((m) => ({ name: m.name.trim(), email: m.email.trim() }))
+      .filter((m) => m.name !== "");
+
     if (!name.trim()) return setError("Give your group a name.");
     if (cleanMembers.length < 2) return setError("Add at least 2 members to split expenses between.");
 
@@ -39,12 +45,12 @@ export default function CreateGroupModal({ onClose, onCreated }) {
   }
 
   return (
-    <Modal title="New group" onClose={onClose}>
+    <Modal title="New group" onClose={onClose} wide={true}>
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}
 
         <div>
-          <label className="text-xs font-medium text-ink/50 uppercase tracking-wide">Group name</label>
+          <label className="text-xs font-semibold text-ink/50 uppercase tracking-wide">Group name</label>
           <input
             autoFocus
             value={name}
@@ -56,15 +62,24 @@ export default function CreateGroupModal({ onClose, onCreated }) {
         </div>
 
         <div>
-          <label className="text-xs font-medium text-ink/50 uppercase tracking-wide">Members</label>
+          <label className="text-xs font-semibold text-ink/50 uppercase tracking-wide">Members</label>
           <div className="mt-1.5 space-y-2">
             {members.map((m, idx) => (
               <div key={idx} className="flex gap-2">
                 <input
-                  value={m}
-                  onChange={(e) => updateMember(idx, e.target.value)}
-                  placeholder={`Member ${idx + 1}`}
+                  value={m.name}
+                  onChange={(e) => updateMember(idx, "name", e.target.value)}
+                  placeholder={`Member name`}
                   maxLength={60}
+                  required={idx < 2 || m.email !== ""}
+                  className="flex-1 rounded-xl border border-ink/10 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-settle/40 focus:border-settle"
+                />
+                <input
+                  type="email"
+                  value={m.email}
+                  onChange={(e) => updateMember(idx, "email", e.target.value)}
+                  placeholder="Email (optional)"
+                  maxLength={100}
                   className="flex-1 rounded-xl border border-ink/10 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-settle/40 focus:border-settle"
                 />
                 {members.length > 2 && (
@@ -82,7 +97,7 @@ export default function CreateGroupModal({ onClose, onCreated }) {
           <button
             type="button"
             onClick={addMemberField}
-            className="mt-2 flex items-center gap-1.5 text-sm font-medium text-settle-dim hover:text-settle"
+            className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-settle-dim hover:text-settle"
           >
             <Plus size={15} /> Add member
           </button>
@@ -91,7 +106,7 @@ export default function CreateGroupModal({ onClose, onCreated }) {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full flex items-center justify-center gap-2 bg-ink text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-ink-soft transition disabled:opacity-60"
+          className="w-full flex items-center justify-center gap-2 bg-ink text-white rounded-xl py-3 text-sm font-semibold hover:bg-ink-soft transition disabled:opacity-60"
         >
           {submitting && <Loader2 size={15} className="animate-spin" />}
           Create group

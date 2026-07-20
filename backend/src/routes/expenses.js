@@ -3,6 +3,8 @@ import { nanoid } from "nanoid";
 import { db } from "../db.js";
 import { asyncHandler, Errors } from "../utils/errors.js";
 import { requireString, requirePositiveInt, requireArray, requireOneOf } from "../utils/validate.js";
+import { requireAuth } from "../middleware/auth.js";
+import { checkGroupAccess } from "./groups.js";
 
 export const expensesRouter = Router();
 
@@ -72,10 +74,11 @@ function resolveSplit(totalAmount, splitType, participants, group) {
 
 expensesRouter.post(
   "/",
+  requireAuth,
   asyncHandler(async (req, res) => {
     const groupId = requireString(req.body?.groupId, "groupId");
-    const group = await db.get("groups", groupId);
-    if (!group) throw Errors.notFound("Group not found.");
+    const group = await checkGroupAccess(groupId, req.user);
+    if (!group) throw Errors.notFound("Group not found or access denied.");
 
     const description = requireString(req.body?.description, "description", { maxLength: 140 });
     const amount = requirePositiveInt(req.body?.amount, "amount");
@@ -106,9 +109,11 @@ expensesRouter.post(
 
 expensesRouter.get(
   "/group/:groupId",
+  requireAuth,
   asyncHandler(async (req, res) => {
-    const group = await db.get("groups", req.params.groupId);
-    if (!group) throw Errors.notFound("Group not found.");
+    const group = await checkGroupAccess(req.params.groupId, req.user);
+    if (!group) throw Errors.notFound("Group not found or access denied.");
+
     const expenses = await db.filter("expenses", (e) => e.groupId === req.params.groupId);
     res.json({ expenses: expenses.sort((a, b) => b.createdAt.localeCompare(a.createdAt)) });
   })
@@ -116,9 +121,14 @@ expensesRouter.get(
 
 expensesRouter.delete(
   "/:expenseId",
+  requireAuth,
   asyncHandler(async (req, res) => {
     const expense = await db.get("expenses", req.params.expenseId);
     if (!expense) throw Errors.notFound("Expense not found.");
+
+    const group = await checkGroupAccess(expense.groupId, req.user);
+    if (!group) throw Errors.notFound("Group access denied.");
+
     await db.remove("expenses", expense.id);
     res.status(204).send();
   })

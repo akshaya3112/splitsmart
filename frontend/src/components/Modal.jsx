@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export default function Modal({ title, onClose, children, wide = false }) {
   useEffect(() => {
@@ -8,9 +9,9 @@ export default function Modal({ title, onClose, children, wide = false }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 bg-ink/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-slide-up"
+      className="fixed inset-0 bg-ink/50 backdrop-blur-md flex items-center justify-center p-4 z-[9999] animate-slide-up"
       style={{ animationDuration: "0.2s" }}
       onClick={onClose}
     >
@@ -30,6 +31,7 @@ export default function Modal({ title, onClose, children, wide = false }) {
         </div>
         <div className="p-6">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

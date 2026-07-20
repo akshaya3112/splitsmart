@@ -9,6 +9,7 @@ export class ApiError extends Error {
 
 export const Errors = {
   badRequest: (message, details) => new ApiError(400, "BAD_REQUEST", message, details),
+  unauthorized: (message) => new ApiError(401, "UNAUTHORIZED", message),
   notFound: (message) => new ApiError(404, "NOT_FOUND", message),
   conflict: (message) => new ApiError(409, "CONFLICT", message),
   internal: (message) => new ApiError(500, "INTERNAL_ERROR", message),

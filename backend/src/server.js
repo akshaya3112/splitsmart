@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import { groupsRouter } from "./routes/groups.js";
 import { expensesRouter } from "./routes/expenses.js";
 import { settlementsRouter } from "./routes/settlements.js";
+import { authRouter } from "./routes/auth.js";
 import { errorHandler, notFoundHandler } from "./utils/errors.js";
 
 dotenv.config();
@@ -41,6 +42,7 @@ app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok", uptime: process.uptime() });
 });
 
+app.use("/api/auth", authRouter);
 app.use("/api/groups", groupsRouter);
 app.use("/api/expenses", expensesRouter);
 app.use("/api/settlements", settlementsRouter);

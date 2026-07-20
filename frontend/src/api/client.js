@@ -9,11 +9,18 @@ class ApiClientError extends Error {
 }
 
 async function request(path, options = {}) {
+  const token = localStorage.getItem("splitsmart_token");
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(options.headers || {}),
+  };
+
   let res;
   try {
     res = await fetch(`${BASE_URL}${path}`, {
-      headers: { "Content-Type": "application/json" },
       ...options,
+      headers,
     });
   } catch {
     throw new ApiClientError(
@@ -37,12 +44,18 @@ async function request(path, options = {}) {
 }
 
 export const api = {
+  register: (name, email, password) =>
+    request("/api/auth/register", { method: "POST", body: JSON.stringify({ name, email, password }) }),
+  login: (email, password) =>
+    request("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }),
+  getMe: () => request("/api/auth/me"),
   createGroup: (name, members) =>
     request("/api/groups", { method: "POST", body: JSON.stringify({ name, members }) }),
   listGroups: () => request("/api/groups"),
   getGroup: (groupId) => request(`/api/groups/${groupId}`),
-  addMember: (groupId, name) =>
-    request(`/api/groups/${groupId}/members`, { method: "POST", body: JSON.stringify({ name }) }),
+  deleteGroup: (groupId) => request(`/api/groups/${groupId}`, { method: "DELETE" }),
+  addMember: (groupId, name, email) =>
+    request(`/api/groups/${groupId}/members`, { method: "POST", body: JSON.stringify({ name, email }) }),
   listExpenses: (groupId) => request(`/api/expenses/group/${groupId}`),
   addExpense: (payload) => request("/api/expenses", { method: "POST", body: JSON.stringify(payload) }),
   deleteExpense: (expenseId) => request(`/api/expenses/${expenseId}`, { method: "DELETE" }),

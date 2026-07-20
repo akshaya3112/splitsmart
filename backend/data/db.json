@@ -1,0 +1,46 @@
+{
+  "groups": {
+    "sOVQ_HK36b": {
+      "id": "sOVQ_HK36b",
+      "name": "aks",
+      "memberIds": [
+        "oKeQsDodY7",
+        "KUxQiskqj4"
+      ],
+      "createdAt": "2026-07-20T12:20:18.719Z"
+    }
+  },
+  "members": {
+    "oKeQsDodY7": {
+      "id": "oKeQsDodY7",
+      "name": "adfd",
+      "groupId": "sOVQ_HK36b"
+    },
+    "KUxQiskqj4": {
+      "id": "KUxQiskqj4",
+      "name": "asdf",
+      "groupId": "sOVQ_HK36b"
+    }
+  },
+  "expenses": {
+    "P8k98XWyqF": {
+      "id": "P8k98XWyqF",
+      "groupId": "sOVQ_HK36b",
+      "description": "sfsf",
+      "amount": 452,
+      "paidBy": "oKeQsDodY7",
+      "splitType": "equal",
+      "splitAmong": [
+        {
+          "memberId": "oKeQsDodY7",
+          "share": 226
+        },
+        {
+          "memberId": "KUxQiskqj4",
+          "share": 226
+        }
+      ],
+      "createdAt": "2026-07-20T12:20:33.064Z"
+    }
+  }
+}
