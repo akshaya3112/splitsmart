@@ -1,67 +1,229 @@
-# SplitSmart 🚀
+# 💸 SplitSmart
 
-Smart expense-splitting for hostel, roommate, and travel groups. Tracks shared expenses and computes the **minimum number of transactions** needed to settle every balance in the group (using a debt-simplification / min-cash-flow algorithm) — not just a running ledger of who-owes-who.
+SplitSmart is a full-stack expense-sharing web application that helps hostel students, roommates, and friends manage shared expenses efficiently. It automatically calculates the minimum number of transactions required to settle all balances using a debt simplification (Min Cash Flow) algorithm.
+
+🌐 **Live Demo:** https://splitsmart-np65.vercel.app
+
+---
 
 ## ✨ Features
-*   **User Authentication**: Register and log in securely using your Email and Password (secured using `bcryptjs` password hashing and stateful JWT tokens).
-*   **Shared Group Access**: Create groups and invite members using their email addresses. Only group members can view, add, or delete expenses within their groups.
-*   **Debt Simplification Algorithm**: Automatically aggregates all group expenses and computes the optimized, minimum set of transactions required to clear all balances.
-*   **Flexible Split Strategies**: Supports splitting expenses **Equally**, by **Exact Amounts**, or by **Percentages**.
-*   **Interactive Settlements Panel**: View clear, copyable step-by-step instructions on who needs to pay whom and how much.
-*   **Group Deletion**: Group creators can easily delete a group, automatically cleaning up all associated expenses, members, and settlements.
-*   **Modern Premium UI**: Built with a dark glassmorphic design system, smooth micro-animations, validation banners, and responsive layouts.
+
+- 🔐 JWT-based User Authentication
+- 👥 Shared Group Access
+- ➕ Create and Manage Groups
+- 💰 Add & Delete Expenses
+- 📊 Automatic Balance Calculation
+- 🔄 Debt Simplification Algorithm
+- 🗑️ Delete Groups
+- 📱 Responsive User Interface
+- ☁️ Cloud Deployment
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Tech Stack
 
-```
+### Frontend
+- React.js
+- Vite
+- React Router DOM
+- Tailwind CSS
+
+### Backend
+- Node.js
+- Express.js
+- JWT Authentication
+
+### Database
+- MongoDB Atlas
+
+### Deployment
+- Frontend: Vercel
+- Backend: Render
+
+---
+
+# 📂 Project Structure
+
+```text
 splitsmart/
-├── backend/     # Express API (Node.js) with JWT Auth & JSON-DB
-└── frontend/    # React + Vite Client (Vanilla CSS & Tailwind)
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── utils/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── package.json
+│   └── vite.config.js
+│
+├── backend/
+│   ├── src/
+│   ├── routes/
+│   ├── middleware/
+│   ├── models/
+│   ├── package.json
+│   └── server.js
+│
+└── README.md
 ```
 
 ---
 
-## 💻 Running Locally
+# 🚀 Getting Started
 
-### 1. Backend Setup
+## Clone the Repository
+
 ```bash
-cd backend
-npm install
-npm run dev         # Runs server in development mode on http://localhost:8080
+git clone https://github.com/akshaya3112/splitsmart.git
+cd splitsmart
 ```
 
-### 2. Frontend Setup (in a second terminal)
+---
+
+## Frontend Setup
+
 ```bash
 cd frontend
 npm install
-# Set API endpoint to point to local backend
-echo "VITE_API_URL=http://localhost:8080" > .env
-npm run dev         # Runs Vite dev server on http://localhost:5173
+npm run dev
+```
+
+Runs on:
+
+```
+http://localhost:5173
 ```
 
 ---
 
-## ☁️ Deployment
+## Backend Setup
 
-### AWS Fargate Deployment
-This application is designed to run in production inside Docker containers on AWS ECS Fargate:
-*   **Frontend**: Served using an Nginx container on ECS Fargate.
-*   **Backend**: Served on ECS Fargate with CORS wildcard fallback support.
-
-To build and run the Docker images locally:
 ```bash
-# Build Backend
-docker build -t splitsmart-backend ./backend
+cd backend
+npm install
+npm start
+```
 
-# Build Frontend
-docker build -t splitsmart-frontend ./frontend
+Runs on:
+
+```
+http://localhost:8080
 ```
 
 ---
 
-## 🔒 Security Measures
-*   **Password Hashing**: Blowfish-based hashing using `bcryptjs`.
-*   **Session Token Protection**: Stateless validation with `jsonwebtoken` stored securely in the browser's `localStorage` and sent via `Authorization: Bearer <token>` headers.
-*   **Input Sanitization**: Built-in validation helper checking types, ranges, constraints, and array limits.
+# ⚙️ Environment Variables
+
+### Frontend (.env)
+
+```env
+VITE_API_URL=https://splitsmart-backend-8ulm.onrender.com
+```
+
+### Backend (.env)
+
+```env
+PORT=8080
+JWT_SECRET=your_secret_key
+MONGODB_URI=your_mongodb_connection_string
+```
+
+---
+
+# 📡 API Endpoints
+
+## Authentication
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Login |
+| GET | `/api/auth/me` | Get logged-in user |
+
+---
+
+## Groups
+
+| Method | Endpoint |
+|---------|----------|
+| GET | `/api/groups` |
+| POST | `/api/groups` |
+| DELETE | `/api/groups/:groupId` |
+
+---
+
+## Expenses
+
+| Method | Endpoint |
+|---------|----------|
+| GET | `/api/expenses/group/:groupId` |
+| POST | `/api/expenses` |
+| DELETE | `/api/expenses/:expenseId` |
+
+---
+
+## Settlements
+
+| Method | Endpoint |
+|---------|----------|
+| GET | `/api/settlements/group/:groupId` |
+
+---
+
+# 🧮 Debt Simplification Algorithm
+
+SplitSmart uses a **Min Cash Flow (Debt Simplification)** algorithm to minimize the number of transactions required to settle balances within a group.
+
+Instead of requiring every member to pay each individual debt, the algorithm computes the smallest possible set of payments that clears all balances efficiently.
+
+---
+
+# 🌍 Deployment
+
+| Service | Platform |
+|----------|----------|
+| Frontend | Vercel |
+| Backend | Render |
+| Database | MongoDB Atlas |
+
+---
+
+# 📸 Screenshots
+
+Login page
+<img width="1902" height="977" alt="image" src="https://github.com/user-attachments/assets/2394a5bd-daf0-4d38-894a-4870f545d6b8" />
+
+Dashboard
+<img width="1902" height="968" alt="image" src="https://github.com/user-attachments/assets/6cc97986-6505-4a20-94cc-8aa5f4dfb659" />
+
+<img width="1917" height="972" alt="image" src="https://github.com/user-attachments/assets/b1b1fc47-28af-423a-b899-498f05f6f220" />
+
+<img width="1915" height="980" alt="image" src="https://github.com/user-attachments/assets/9b8e84c5-5d90-4842-b0a3-2e1345c7c3ad" />
+
+
+
+# 🎯 Future Improvements
+
+- 📧 Email Invitations
+- 🌙 Dark Mode
+- 💱 Multi-Currency Support
+- 📈 Expense Analytics
+- 📄 Export Reports (PDF/Excel)
+- 📱 Mobile Application
+
+---
+
+# 👨‍💻 Author
+
+**Akshaya Thippireddy**
+
+GitHub: https://github.com/akshaya3112
+
+---
+
+# ⭐ If you found this project helpful, consider giving it a star!
